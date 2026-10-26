@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://manuscriptmatrix.local/contracts/agent-command.schema.json",
+  "title": "Manuscript Matrix Agent Command",
+  "type": "object",
+  "required": ["version", "commandId", "type", "payload"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "commandId": { "type": "string", "format": "uuid" },
+    "type": {
+      "enum": [
+        "manuscript.create",
+        "manuscript.update",
+        "manuscript.position.set",
+        "manuscript.readiness.set",
+        "manuscript.archive.set",
+        "manuscript.delete",
+        "journal.create",
+        "journal.rename",
+        "journal.rank.set",
+        "journal.metadata.update",
+        "journal.archive.set",
+        "journal.delete",
+        "target.set",
+        "target.remove",
+        "submission.record",
+        "submission.status.record",
+        "submission.event.amend",
+        "submission.event.void",
+        "relationship.create",
+        "relationship.update",
+        "relationship.remove"
+      ]
+    },
+    "payload": {
+      "type": "object",
+      "properties": {
+        "impactFactor": { "type": ["number", "null"], "minimum": 0 },
+        "readiness": {
+          "enum": ["incomplete", "experimenting", "conceptualizing", "writing", "readyToSubmit"]
+        },
+        "partitions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/journalPartition" }
+        }
+      }
+    },
+    "requestedAt": { "type": "string", "format": "date-time" },
+    "source": { "enum": ["ui", "agent", "import"] }
+  },
+  "$defs": {
+    "journalPartition": {
+      "type": "object",
+      "required": ["scheme", "value"],
+      "additionalProperties": false,
+      "properties": {
+        "id": { "type": "string", "format": "uuid" },
+        "scheme": { "enum": ["JCR", "CCF", "CAS", "新锐"] },
+        "year": { "type": ["integer", "null"], "minimum": 1900, "maximum": 2100 },
+        "value": { "type": "string" },
+        "category": { "type": ["string", "null"] }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "scheme": { "const": "JCR" } } },
+          "then": { "properties": { "value": { "enum": ["Q1", "Q2", "Q3", "Q4"] } } }
+        },
+        {
+          "if": { "properties": { "scheme": { "const": "CCF" } } },
+          "then": { "properties": { "value": { "enum": ["A", "B", "C"] } } }
+        },
+        {
+          "if": { "properties": { "scheme": { "enum": ["CAS", "新锐"] } } },
+          "then": { "properties": { "value": { "enum": ["1区", "2区", "3区", "4区"] } } }
+        }
+      ]
+    }
+  }
+}

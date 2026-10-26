@@ -1,0 +1,63 @@
+name: ManuscriptMatrix
+options:
+  bundleIdPrefix: io.manuscriptmatrix
+  deploymentTarget:
+    macOS: "15.0"
+  createIntermediateGroups: true
+  generateEmptyDirectories: true
+  developmentLanguage: zh-Hans
+packages:
+  ManuscriptKit:
+    path: Packages/ManuscriptKit
+settings:
+  base:
+    SWIFT_VERSION: "6.0"
+    MACOSX_DEPLOYMENT_TARGET: "15.0"
+    CURRENT_PROJECT_VERSION: 2
+    MARKETING_VERSION: 0.9.0
+targets:
+  ManuscriptMatrixAgent:
+    type: tool
+    platform: macOS
+    sources:
+      - path: Packages/ManuscriptKit/Sources/ManuscriptAgentBridge
+    dependencies:
+      - package: ManuscriptKit
+        product: ManuscriptApplication
+      - package: ManuscriptKit
+        product: ManuscriptInfrastructure
+    settings:
+      base:
+        PRODUCT_NAME: manuscript-matrix-agent
+        ENABLE_HARDENED_RUNTIME: YES
+        SWIFT_STRICT_CONCURRENCY: complete
+  ManuscriptMatrix:
+    type: application
+    platform: macOS
+    sources:
+      - path: Apps/ManuscriptMatrixApp
+    dependencies:
+      - package: ManuscriptKit
+        product: ManuscriptApplication
+      - package: ManuscriptKit
+        product: ManuscriptDesignSystem
+      - package: ManuscriptKit
+        product: ManuscriptInfrastructure
+      - package: ManuscriptKit
+        product: MatrixFeature
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: io.manuscriptmatrix.app
+        PRODUCT_NAME: Manuscript Matrix
+        GENERATE_INFOPLIST_FILE: YES
+        INFOPLIST_KEY_CFBundleDisplayName: Manuscript Matrix
+        INFOPLIST_KEY_LSApplicationCategoryType: public.app-category.productivity
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ENABLE_HARDENED_RUNTIME: YES
+        ENABLE_DEBUG_DYLIB: NO
+        CODE_SIGN_STYLE: Automatic
+        SWIFT_STRICT_CONCURRENCY: complete
+    scheme:
+      testTargets: []
+      commandLineArguments:
+        "--demo": true
