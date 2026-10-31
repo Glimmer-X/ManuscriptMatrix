@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.9.1 — 2026-10-31
+
+- Fixed elapsed-day badges remaining frozen while the app stays open, including matrix cells that skip redraws when their board data is unchanged.
+- Relative dates now share a presentation clock that refreshes every minute and immediately after app activation, wake or a system clock change. Popovers, inspectors and history views use the same clock.
+- No board format or stored manuscript data changes.
+
 ## 0.9.0 — 2026-10-26
 
 First public release, with a fresh source history and no personal board data.

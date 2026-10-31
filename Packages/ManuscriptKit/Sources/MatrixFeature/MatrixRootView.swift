@@ -5,6 +5,21 @@ import SwiftUI
 import UniformTypeIdentifiers
 
 public struct MatrixRootView: View {
+    private let store: BoardCommandService
+
+    public init(store: BoardCommandService) {
+        self.store = store
+    }
+
+    public var body: some View {
+        DisplayDateScope {
+            MatrixContentView(store: store)
+        }
+    }
+}
+
+private struct MatrixContentView: View {
+    @Environment(\.displayDate) private var displayDate
     @ObservedObject private var store: BoardCommandService
     @State private var searchText = ""
     @State private var addSheet: AddSheet?
@@ -27,11 +42,11 @@ public struct MatrixRootView: View {
         var id: String { rawValue }
     }
 
-    public init(store: BoardCommandService) {
+    init(store: BoardCommandService) {
         self.store = store
     }
 
-    public var body: some View {
+    var body: some View {
         HStack(spacing: 0) {
             sidebar
                 .frame(width: MMLayout.sidebarWidth)
@@ -245,7 +260,7 @@ public struct MatrixRootView: View {
 
             HStack(spacing: 7) {
                 Circle().fill(MMColor.jade).frame(width: 7, height: 7)
-                Text(MMLocalization.format("v%@ · 更新于%@", appVersion, MMDateText.relativePast(from: store.board.modifiedAt)))
+                Text(MMLocalization.format("v%@ · 更新于%@", appVersion, MMDateText.relativePast(from: store.board.modifiedAt, to: displayDate)))
                     .lineLimit(1)
                 Spacer(minLength: 0)
             }

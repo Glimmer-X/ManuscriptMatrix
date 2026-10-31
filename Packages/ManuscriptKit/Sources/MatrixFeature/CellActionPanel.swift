@@ -4,6 +4,7 @@ import ManuscriptDomain
 import SwiftUI
 
 struct CellActionPanel: View {
+    @Environment(\.displayDate) private var displayDate
     @ObservedObject var store: BoardCommandService
     let manuscript: Manuscript
     let journal: Journal
@@ -138,7 +139,7 @@ struct CellActionPanel: View {
             Text(MMLocalization.string(label))
                 .foregroundStyle(MMColor.secondaryInk)
             Spacer(minLength: 6)
-            Text("\(MMDateText.absolute.string(from: date)) · \(MMDateText.relativePast(from: date))")
+            Text("\(MMDateText.absolute.string(from: date)) · \(MMDateText.relativePast(from: date, to: displayDate))")
                 .foregroundStyle(MMColor.ink)
                 .monospacedDigit()
         }

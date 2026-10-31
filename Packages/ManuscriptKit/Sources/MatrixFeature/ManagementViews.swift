@@ -98,6 +98,7 @@ struct ManuscriptLibraryView: View {
 }
 
 private struct ManuscriptLibraryCard: View {
+    @Environment(\.displayDate) private var displayDate
     let board: BoardSnapshot
     let manuscript: Manuscript
     let onOpen: () -> Void
@@ -161,7 +162,7 @@ private struct ManuscriptLibraryCard: View {
                     }
                     Spacer()
                     if activeJournal != nil, let start = projection.latestActionAt {
-                        Text(MMDateText.elapsed(from: start))
+                        Text(MMDateText.elapsed(from: start, to: displayDate))
                             .font(.system(size: 25, weight: .medium, design: .rounded))
                             .foregroundStyle(projection.status.color)
                     }
@@ -447,6 +448,7 @@ struct RelationshipManagementView: View {
 }
 
 private struct RelationshipCard: View {
+    @Environment(\.displayDate) private var displayDate
     let relationship: ManuscriptRelationship
     let firstTitle: String
     let secondTitle: String
@@ -475,7 +477,7 @@ private struct RelationshipCard: View {
                 .font(.system(size: 12))
                 .foregroundStyle(MMColor.ink)
                 .fixedSize(horizontal: false, vertical: true)
-            Text(MMLocalization.format("更新于 %@", MMDateText.relativePast(from: relationship.updatedAt)))
+            Text(MMLocalization.format("更新于 %@", MMDateText.relativePast(from: relationship.updatedAt, to: displayDate)))
                 .font(.system(size: 9))
                 .foregroundStyle(MMColor.secondaryInk)
         }
@@ -572,6 +574,7 @@ struct ActivityTimelineView: View {
 }
 
 private struct ActivityRow: View {
+    @Environment(\.displayDate) private var displayDate
     let event: SubmissionEvent
     let manuscriptTitle: String
     let onOpen: () -> Void
@@ -611,7 +614,7 @@ private struct ActivityRow: View {
                 VStack(alignment: .trailing, spacing: 6) {
                     Text(MMDateText.absolute.string(from: event.occurredAt))
                         .font(.system(size: 10, weight: .medium))
-                    Text(MMDateText.relativePast(from: event.occurredAt))
+                    Text(MMDateText.relativePast(from: event.occurredAt, to: displayDate))
                         .font(.system(size: 9))
                         .foregroundStyle(MMColor.secondaryInk)
                     if !event.isVoided {

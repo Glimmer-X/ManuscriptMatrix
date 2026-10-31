@@ -40,7 +40,7 @@ def main():
             {"jsonrpc": "2.0", "id": 4, "method": "tools/call", "params": {"name": "matrix_board_get", "arguments": {}}},
         ]
         replies = rpc("--board", str(board), "--read-only", requests=requests)
-        assert replies[0]["result"]["serverInfo"]["version"] == "0.9.0"
+        assert replies[0]["result"]["serverInfo"]["version"] == "0.9.1"
         assert replies[0]["result"]["protocolVersion"] == "2025-11-25"
         assert len(replies[1]["result"]["tools"]) == 3
         assert replies[2]["result"]["isError"]

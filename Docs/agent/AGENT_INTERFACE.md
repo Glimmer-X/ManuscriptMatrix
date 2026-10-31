@@ -109,7 +109,7 @@ a second, without relaunching.
 
 The server uses newline-delimited JSON-RPC over standard input/output. It accepts `initialize`, `ping`, `tools/list` and `tools/call`, while also permitting tool discovery without a mandatory initialization round trip. Successful calls return both text content and `structuredContent`; validation failures are tool errors and do not modify the board.
 
-The server identifies as `manuscript-matrix` version `0.9.0`. It supports the `2025-11-25` protocol dialect for its stdio tool surface. To inspect the real tool definitions without reading any personal data:
+The server identifies as `manuscript-matrix` version `0.9.1`. It supports the `2025-11-25` protocol dialect for its stdio tool surface. To inspect the real tool definitions without reading any personal data:
 
 ```bash
 printf '%s\n' \

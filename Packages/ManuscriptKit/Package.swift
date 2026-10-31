@@ -41,6 +41,10 @@ let package = Package(
             ]
         ),
         .testTarget(
+            name: "MatrixFeatureTests",
+            dependencies: ["MatrixFeature", "ManuscriptInfrastructure"]
+        ),
+        .testTarget(
             name: "ManuscriptDomainTests",
             dependencies: ["ManuscriptDomain"]
         ),

@@ -48,7 +48,7 @@ struct MatrixMCPServer {
                 "serverInfo": .object([
                     "name": .string("manuscript-matrix"),
                     "title": .string("Manuscript Matrix"),
-                    "version": .string("0.9.0")
+                    "version": .string("0.9.1")
                 ]),
                 "instructions": .string("Read the board before mutating it. Use stable UUIDs from matrix_board_get and apply one validated command at a time.")
             ])
@@ -58,7 +58,7 @@ struct MatrixMCPServer {
 
         case "server/discover":
             return .object([
-                "serverInfo": .object(["name": .string("manuscript-matrix"), "version": .string("0.9.0")]),
+                "serverInfo": .object(["name": .string("manuscript-matrix"), "version": .string("0.9.1")]),
                 "capabilities": .object(["tools": .bool(true)])
             ])
 

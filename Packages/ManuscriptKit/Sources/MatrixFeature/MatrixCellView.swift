@@ -4,6 +4,7 @@ import ManuscriptDomain
 import SwiftUI
 
 struct MatrixCellView: View, Equatable {
+    @Environment(\.displayDate) private var displayDate
     @ObservedObject var store: BoardCommandService
     let manuscript: Manuscript
     let journal: Journal
@@ -116,17 +117,17 @@ struct MatrixCellView: View, Equatable {
     private var compactElapsedText: String? {
         if projection.activeJournalID == journal.id,
            let startedAt = projection.latestActionAt {
-            return MMDateText.elapsed(from: startedAt)
+            return MMDateText.elapsed(from: startedAt, to: displayDate)
         }
         if let event = latestTerminalEvent {
-            return MMDateText.elapsed(from: event.occurredAt)
+            return MMDateText.elapsed(from: event.occurredAt, to: displayDate)
         }
         return nil
     }
 
     private var accessibilityLabel: String {
         if projection.activeJournalID == journal.id {
-            let elapsed = projection.latestActionAt.map { ", \(MMDateText.elapsed(from: $0)) elapsed" } ?? ""
+            let elapsed = projection.latestActionAt.map { ", \(MMDateText.elapsed(from: $0, to: displayDate)) elapsed" } ?? ""
             return "\(manuscript.shortTitle), \(projection.status.displayName), at \(journal.currentName)\(elapsed)"
         }
         if let target {
@@ -134,7 +135,7 @@ struct MatrixCellView: View, Equatable {
         }
         if let event = latestTerminalEvent {
             let decisionDuration = rejectionDecisionDays.map { ", decision took \($0) days" } ?? ""
-            return "\(manuscript.shortTitle), \(event.kind.displayName), \(journal.currentName), \(MMDateText.elapsed(from: event.occurredAt)) ago\(decisionDuration)"
+            return "\(manuscript.shortTitle), \(event.kind.displayName), \(journal.currentName), \(MMDateText.elapsed(from: event.occurredAt, to: displayDate)) ago\(decisionDuration)"
         }
         return "\(manuscript.shortTitle), \(journal.currentName), no record"
     }
@@ -217,6 +218,7 @@ private struct CompactMatrixMarker: View {
 }
 
 private struct LiveSubmissionCard: View {
+    @Environment(\.displayDate) private var displayDate
     let manuscript: Manuscript
     let projection: ManuscriptProjection
     let priorTerminalCount: Int
@@ -237,7 +239,7 @@ private struct LiveSubmissionCard: View {
                 Spacer(minLength: 3)
                 if let start = projection.latestActionAt {
                     VStack(alignment: .trailing, spacing: 0) {
-                        Text(MMDateText.elapsed(from: start))
+                        Text(MMDateText.elapsed(from: start, to: displayDate))
                             .font(.system(size: 21, weight: .medium, design: .rounded))
                             .foregroundStyle(projection.status.color)
                         Text("已过")
@@ -299,6 +301,7 @@ private struct TargetMarker: View {
 }
 
 private struct HistoricalTrace: View {
+    @Environment(\.displayDate) private var displayDate
     let event: SubmissionEvent
     let currentJournalName: String
     let decisionDays: Int?
@@ -312,7 +315,7 @@ private struct HistoricalTrace: View {
                     .font(.system(size: 10, weight: .semibold))
                     .foregroundStyle(MMColor.ink)
                 Spacer()
-                Text(MMDateText.relativePast(from: event.occurredAt))
+                Text(MMDateText.relativePast(from: event.occurredAt, to: displayDate))
                     .font(.system(size: 9, weight: .medium, design: .rounded))
                     .foregroundStyle(MMColor.secondaryInk)
             }

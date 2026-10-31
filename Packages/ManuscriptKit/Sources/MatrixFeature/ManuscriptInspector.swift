@@ -4,6 +4,7 @@ import ManuscriptDomain
 import SwiftUI
 
 struct ManuscriptInspector: View {
+    @Environment(\.displayDate) private var displayDate
     @Environment(\.dismiss) private var dismiss
     @ObservedObject var store: BoardCommandService
     let manuscript: Manuscript
@@ -138,7 +139,7 @@ struct ManuscriptInspector: View {
                         Text(journal.currentName)
                             .font(.system(size: 14, weight: .semibold))
                         if let start = projection.latestActionAt {
-                            Text("\(projection.status.displayName) \(MMDateText.elapsed(from: start)) · \(MMDateText.absolute.string(from: start))")
+                            Text("\(projection.status.displayName) \(MMDateText.elapsed(from: start, to: displayDate)) · \(MMDateText.absolute.string(from: start))")
                                 .font(.system(size: 11))
                                 .foregroundStyle(MMColor.secondaryInk)
                         }
@@ -277,7 +278,7 @@ struct ManuscriptInspector: View {
                                     MMPill("已纠正", foreground: MMColor.graphite, background: MMColor.canvas)
                                 }
                                 Spacer()
-                                Text(MMDateText.relativePast(from: event.occurredAt))
+                                Text(MMDateText.relativePast(from: event.occurredAt, to: displayDate))
                                     .font(.system(size: 9, weight: .medium, design: .rounded))
                                     .foregroundStyle(MMColor.secondaryInk)
                             }
